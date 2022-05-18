@@ -9,12 +9,6 @@ module.exports = {
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sass`,
     {
-      resolve: 'gatsby-plugin-manifest',
-      options: {
-        icon: 'src/images/favicoon.png',
-      },
-    },
-    {
       resolve: `gatsby-source-filesystem`,
       options: {
         path: path.join(__dirname, `src`, `images`),
