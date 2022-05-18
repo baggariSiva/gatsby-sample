@@ -12,7 +12,7 @@ export default function Home() {
 
   const getlatency = () => {
     var started = new Date().getTime();
-    var url = "https://ipinfo.io/json";
+    var url = "https://ipwhois.app/json/";
     fetch(url)
       .then(function (response) {
         var ended = new Date().getTime();
@@ -28,7 +28,7 @@ export default function Home() {
     const hname = window.location.hostname;
     setHost(hname);
     setInterval(getlatency, 1000);
-    const res = await axios.get("https://ipinfo.io/json");
+    const res = await axios.get("https://ipwhois.app/json/");
     setCity(res.data.city);
     setCountry(res.data.country);
     setIP(res.data.ip);
