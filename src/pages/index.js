@@ -5,23 +5,16 @@ import elestio from "../images/elestio-logo.svg";
 
 export default function Home() {
   const [ip, setIP] = useState("?");
-  const [host, setHost] = useState("");
   const [Latency, setLatency] = useState("?");
 
   const getData = async () => {
-    const hname = window.location.hostname;
-    setHost(hname);
-
     try {
-      const res = await axios.get("https://ipconfig.io/json/");
-      console.log(res);
-      console.log("api data above");
-      setIP(res.data);
+       const res = await axios.get("https://ipwhois.app/json/");
+       setIP(res.data);
     } catch (ex) {}
   };
 
   useEffect(() => {
-    getData();
     setInterval(() => {
       var started = new Date().getTime();
       var url = "/data.json";
@@ -35,11 +28,12 @@ export default function Home() {
           setLatency("?");
         });
     }, 1000);
+    getData();
   }, []);
 
   return (
     <main>
-      <title>Elestio Staic Example</title>
+      <title>Elestio Gatsby Example</title>
       <img
         src={elestio}
         alt="Elestio logo"
@@ -48,14 +42,14 @@ export default function Home() {
       <div className="container">
         <div className="app-body">
           <div className="app-heading">
-            <h1>Welcome to Elestio</h1>
+            <h1>Welcome to Elestio - Gatsby</h1>
             <h4>Deploy your apps quickly with the easiest CI/CD system</h4>
           </div>
 
           <p className="app-info-block">
-            This Host <strong className="subVal">{host}</strong>
+            This Host <strong className="subVal">{window.location.host}</strong>
           </p>
-          {ip.ip ? (
+          {ip.ip && (
             <React.Fragment>
               <p className="app-info-block">
                 Your IP <strong className="subVal">{ip.ip}</strong>
@@ -68,7 +62,7 @@ export default function Home() {
                 </strong>
               </p>
             </React.Fragment>
-          ) : null}
+          )}
 
           <p className="app-info-block">
             Latency to server <strong className="subVal">{Latency} ms</strong>
