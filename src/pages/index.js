@@ -1,50 +1,49 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import Image from "../components/image";
 import "../components/style.scss";
+import elestio from "../images/elestio-logo.svg";
 
 export default function Home() {
   const [ip, setIP] = useState("?");
-  const [city, setCity] = useState("?");
-  const [country, setCountry] = useState("?");
   const [host, setHost] = useState("");
   const [Latency, setLatency] = useState("?");
-
-  const getlatency = () => {
-    var started = new Date().getTime();
-    var url = "https://ipwhois.app/json/";
-    fetch(url)
-      .then(function (response) {
-        var ended = new Date().getTime();
-        var milliseconds = ended - started;
-        setLatency(milliseconds);
-      })
-      .catch(function (error) {
-        setLatency("?");
-      });
-  };
 
   const getData = async () => {
     const hname = window.location.hostname;
     setHost(hname);
-    setInterval(getlatency, 1000);
-    const res = await axios.get("https://ipwhois.app/json/");
-    setCity(res.data.city);
-    setCountry(res.data.country);
-    setIP(res.data.ip);
+
+    try {
+      const res = await axios.get("https://ipconfig.io/json/");
+      console.log(res);
+      console.log("api data above");
+      setIP(res.data);
+    } catch (ex) {}
   };
 
   useEffect(() => {
     getData();
+    setInterval(() => {
+      var started = new Date().getTime();
+      var url = "/data.json";
+      fetch(url)
+        .then(function (response) {
+          var ended = new Date().getTime();
+          var milliseconds = ended - started;
+          setLatency(milliseconds);
+        })
+        .catch(function (error) {
+          setLatency("?");
+        });
+    }, 1000);
   }, []);
 
   return (
     <main>
       <title>Elestio Staic Example</title>
-      <Image
-        src="elestio-logo.svg"
-        alt="logo"
-        style={{ height: "40px", margin: "20px" }}
+      <img
+        src={elestio}
+        alt="Elestio logo"
+        style={{ height: `60px`, margin: `20px` }}
       />
       <div className="container">
         <div className="app-body">
@@ -56,17 +55,20 @@ export default function Home() {
           <p className="app-info-block">
             This Host <strong className="subVal">{host}</strong>
           </p>
+          {ip.ip ? (
+            <React.Fragment>
+              <p className="app-info-block">
+                Your IP <strong className="subVal">{ip.ip}</strong>
+              </p>
 
-          <p className="app-info-block">
-            Your IP <strong className="subVal">{ip}</strong>
-          </p>
-
-          <p className="app-info-block">
-            Your Location
-            <strong className="subVal">
-              {country},{city}
-            </strong>
-          </p>
+              <p className="app-info-block">
+                Your Location
+                <strong className="subVal">
+                  {ip.country},{ip.city}
+                </strong>
+              </p>
+            </React.Fragment>
+          ) : null}
 
           <p className="app-info-block">
             Latency to server <strong className="subVal">{Latency} ms</strong>
